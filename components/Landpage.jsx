@@ -1,4 +1,5 @@
 import React from 'react'
+import {BsSearch} from 'react-icons/bs'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRef, useState } from "react";
@@ -42,10 +43,18 @@ const Landpage = () => {
             <h1>experience interactive learning. your gateway to success every lesson counts</h1>
             <div className="search-container">
               <input type="search" name="" id="" placeholder='search' className='search-input'/>
+              <span className='search-btn-container'><BsSearch/></span>
             </div>
-            <Link href='/course' className='landpage-link'>career tracks</Link>
           </div>
         </div>
+    </section>
+    <section className="course-listing">
+      <div className='course-list-card'></div>
+      <div className='course-list-card'></div>
+      <div className='course-list-card'></div>
+      <div className='course-list-card'></div>
+      <div className='course-list-card'></div>
+      <div className='course-list-card'></div>
     </section>
     </>
   )

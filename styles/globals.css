@@ -1,4 +1,4 @@
-/* html,
+html,
 body {
   padding: 0;
   margin: 0;
@@ -126,8 +126,8 @@ p{
   object-fit: cover;
 }
 .text-container{
-  width: 60%;
-  padding:20px;
+  width: 50%;
+  padding:0px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,16 +135,39 @@ p{
 }
 .search-container{
   margin-top: 20px;
+  width:600px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.search-input::placeholder{
+  color:black;
+  text-transform:capitalize;
 }
 .search-input{
-  width:600px;
+  width:85%;
   height:50px;
-  border-radius: 8px;
+  border-radius: 8px 0px 0px 8px;
   background-color: white;
   text-indent: 20px;
   font-family: noto sans;
   font-size: 1.1rem;
   outline: none;
+  color:black;
+  border:none;
+}
+.search-btn-container{
+  width:15%;
+  height:50px;
+  background:orangered;
+  border-radius:0px 8px 8px 0px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.search-btn-container svg{
+  font-size:1.5rem;
+  color:white;
 }
 .text-container a{
   width:600px;
@@ -156,7 +179,7 @@ p{
   font-size:1.1rem;
   text-align: center;
 }
-.landpage-header nav ul li:first-of-type{
+.home-link a{
   padding:10px 20px;
   background:black;
   border-radius:4px;
@@ -234,59 +257,133 @@ p{
   height: 300px;
   margin-bottom:20px;
   border-radius:10px;
-} */
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+.course-listing{
+  padding:40px 0px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  row-gap:20px;
+  column-gap: 20px;
+}
+.course-list-card{
+  height:400px;
+  background-color: green;
+  border-radius: 10px;
+  display:flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction:column;
+}
+.drop-down{
+  position: absolute;
+  bottom:-247px;
+  left: -10px;
+  height:0px;
+  overflow: hidden;
+  background-color: rgb(255, 255, 255);
+  min-width: 250px !important;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+}
+.drop-down li{
+  width:100%;
+}
+.drop-down-container:hover > .drop-down{
+  height:250px;
+  padding: 20px;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.drop-down a{
+  width:100%;
 }
-
-* {
-  box-sizing: border-box;
+.drop-down-container{
+  position: relative;
 }
-header{
+footer{
+  background-color: orangered;
   width: 100%;
+  display:flex;
+  align-items:center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 50px 20px 30px 20px ;
+}
+.foot-containers{
+  width:80%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding-bottom: 20px;
+  border-bottom:1px solid rgb(165, 165, 165);
+  margin-bottom: 20px;
+}
+.copyright-container p {
+  color:white;
+}
+.right-foot{
+  display: flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+}
+.left-foot{
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background-color: aliceblue;
 }
-header ul{
-  width: 60%;
+.foot{
+  min-width:150px;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 15px 20px;
+  flex-direction: column;
+  align-self:flex-start;
 }
-.dropdown{
-  position: fixed;
-  z-index: 2;
-  background-color: black;
-  backdrop-filter: blur(5px);
-  top: 20px;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+.foot h2, .foot a{
+  width:100%;
+  align-self:flex-start;
+  color:white;
+  margin:10px 0px;
+  text-transform:capitalize;
 }
-.dropdown p{
-  color: white;
+.foot a{
+  color:#ddd;
 }
-.tab-container{
-  z-index:3;
+.right-foot{
+  width:30%;
 }
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
+.right-foot-icon-container{
+  width:80%;
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+}
+.right-foot-icon-container svg{
+  font-size:1.7rem;
+  color:#ddd;
+}
+.foot-logo{
+  width:80%;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  padding-left:20px;
+}
+.foot-logo svg{
+  color:blue;
+  font-size:2rem;
+}
+.right-foot-text-container{
+  width:80%;
+  padding-left:20px;
+  margin: 30px 0px ;
+}
+.right-foot-text-container p{
+  color:#ddd;
+}
+.right-foot-text-container p::first-letter{
+  text-transform:uppercase;
 }
