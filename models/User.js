@@ -1,10 +1,11 @@
 import mongoose from 'mongoose'
 
-const schema = mongoose.Schema({
+export default (mongoose.models.User ?? mongoose.model('User',
+mongoose.Schema({
   email: {
     type: String,
     required: true
   }
 })
 
-export default mongoose.model(schema)
+))

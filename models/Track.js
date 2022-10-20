@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const schema = mongoose.Schema({
+export default (mongoose.models.Track ?? mongoose.model('Track', mongoose.Schema({
   name: {
     type: String,
     required: true
@@ -9,6 +9,4 @@ const schema = mongoose.Schema({
     type: String,
     required: true
   }
-})
-
-export default mongoose.model(schema)
+})))
