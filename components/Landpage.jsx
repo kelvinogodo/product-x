@@ -49,12 +49,42 @@ const Landpage = () => {
         </div>
     </section>
     <section className="course-listing">
-      <div className='course-list-card'></div>
-      <div className='course-list-card'></div>
-      <div className='course-list-card'></div>
-      <div className='course-list-card'></div>
-      <div className='course-list-card'></div>
-      <div className='course-list-card'></div>
+      <div className='course-list-card'>
+        <span className='card-details'>
+          <h2>3D beginners course</h2>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas in error ipsam enim</p>
+        </span>
+      </div>
+      <div className='course-list-card'>
+      <span className='card-details'>
+      <h2>adobe photoshop</h2>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas in error ipsam enim</p>
+      </span>
+      </div>
+      <div className='course-list-card'>
+      <span className='card-details'>
+      <h2>data science</h2>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas in error ipsam enim</p>
+      </span>
+      </div>
+      <div className='course-list-card'>
+      <span className='card-details'>
+      <h2>figma for newbies</h2>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas in error ipsam enim</p>
+      </span>
+      </div>
+      <div className='course-list-card'>
+      <span className='card-details'>
+        <h2>front-end web developement</h2>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas in error ipsam enim</p>
+      </span>
+      </div>
+      <div className='course-list-card'>
+      <span className='card-details'>
+      <h2>front-end web developement</h2>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas in error ipsam enim</p>
+      </span>
+      </div>
     </section>
     </>
   )
