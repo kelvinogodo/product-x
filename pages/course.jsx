@@ -3,8 +3,8 @@ import { useState } from 'react';
 import Header from '../components/Header';
 import Image from 'next/image';
 import {motion} from 'framer-motion'
-import {BsGridFill} from 'react-icons/bs'
 import {BsColumnsGap} from 'react-icons/bs'
+import Footer from './../components/Footer';
 const course = () => {
   const [categories,setCategories] = useState([
     {
@@ -24,7 +24,7 @@ const course = () => {
     },
     {
       id:4,
-      title:'data science',
+      title:'data',
       active:false
     },
     {
@@ -80,13 +80,17 @@ const course = () => {
         <motion.div layout className={`${grid === false ? 'column' : 'grid'}`}>
             {
               courseDependent.map(course =>(
-                <motion.div className={` ${grid === false ? 'column-div' : 'course-card'}`}>
-                  <Image src={`${course.image}`} alt='course image' layout='fill' className='course-image'/>
+                <motion.div className={`${grid === false ? 'column-div' : 'course-card'}`}>
+                  <div className="course-img-container">
+                    <Image src={`${course.image}`} alt='course image' layout='fill' className='course-image'/>
+                  </div>
+                  <p>lorem</p>
                 </motion.div>
               ))
             }
         </motion.div>
     </section>
+    <Footer />
     </>
   )
 }
