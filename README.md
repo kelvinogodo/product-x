@@ -1,34 +1,78 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# product x
 
-## Getting Started
+An interactive e-learning platform built with Next.js and MongoDB. Learners can browse course tracks by category, view course details, and sign up to get resources, while course data is served through a Mongoose-backed REST API.
 
-First, run the development server:
+> **Status:** work in progress — most course content is placeholder text/images and a few linked pages (e.g. `/faq`) aren't built yet.
 
-```bash
-npm run dev
-# or
-yarn dev
+## Features
+
+- **Landing page** — autoplaying image carousel (Swiper), search bar, and a course listing grid.
+- **Course catalog** (`/course`) — filter courses by category (data, management, programming, design) and toggle between grid and column layouts, animated with Framer Motion.
+- **Course detail page** — email capture modal for requesting course resources.
+- **Tracks API** — REST endpoints backed by MongoDB/Mongoose for creating, reading, updating, and deleting course tracks.
+
+## Tech stack
+
+- [Next.js](https://nextjs.org/) 12 (Pages Router) + React 18
+- [MongoDB](https://www.mongodb.com/) via [Mongoose](https://mongoosejs.com/)
+- [Framer Motion](https://www.framer.com/motion/) for layout animations
+- [Swiper](https://swiperjs.com/) for the hero carousel
+- [react-icons](https://react-icons.github.io/react-icons/) for iconography
+
+## Getting started
+
+1. Install dependencies:
+
+   ```bash
+   pnpm install
+   # or npm install / yarn install
+   ```
+
+2. Create a `.env` file in the project root with a MongoDB connection string:
+
+   ```bash
+   MONGO_URI=mongodb+srv://<user>:<password>@<cluster>/<db>
+   ```
+
+3. Run the development server:
+
+   ```bash
+   pnpm dev
+   # or npm run dev / yarn dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) to view the app.
+
+## Project structure
+
+```
+components/   Shared UI — Header, Footer, Layout, Landpage
+pages/        Routes (index, course, id) and API routes under pages/api
+models/       Mongoose schemas (Track, User)
+utils/db.js   MongoDB connection setup
+styles/       Global and module CSS
+public/       Static assets (images, favicon)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## API
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+All track endpoints live under `/api/tracks` and are backed by the `Track` model (`slug`, `name`, `link`).
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+| Method | Route                | Description                    |
+| ------ | --------------------- | ------------------------------- |
+| GET    | `/api/tracks`         | List all tracks                 |
+| PUT    | `/api/tracks`         | Create a new track              |
+| GET    | `/api/tracks/[slug]`  | Get a track by slug             |
+| PATCH  | `/api/tracks/[slug]`  | Update a track by slug          |
+| DELETE | `/api/tracks/[slug]`  | Delete a track by slug          |
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Available scripts
 
-## Learn More
+- `dev` — start the Next.js development server
+- `build` — build the app for production
+- `start` — start the production server
+- `lint` — run ESLint
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The easiest way to deploy is via the [Vercel Platform](https://vercel.com/new). See the [Next.js deployment docs](https://nextjs.org/docs/deployment) for other options.
