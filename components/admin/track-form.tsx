@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageUpload } from "@/components/admin/image-upload";
 import { upsertTrack, type FormState } from "@/lib/actions/admin";
 
 function SubmitButton() {
@@ -60,8 +61,8 @@ export function TrackForm({
         </Select>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="coverImageUrl">Cover image URL</Label>
-        <Input id="coverImageUrl" name="coverImageUrl" defaultValue={track?.cover_image_url ?? ""} type="url" />
+        <Label htmlFor="coverImageUrl">Cover image</Label>
+        <ImageUpload name="coverImageUrl" bucket="covers" defaultValue={track?.cover_image_url ?? ""} />
       </div>
       {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
       <SubmitButton />

@@ -1,39 +1,33 @@
 "use client";
 
 import Link from "next/link";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormState } from "react-dom";
 import { useSearchParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/password-input";
+import { FormMessage } from "@/components/ui/form-message";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { signIn } from "@/lib/actions/auth";
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" className="w-full" disabled={pending}>
-      {pending ? "Signing in..." : "Log in"}
-    </Button>
-  );
-}
+import { safeRedirectPath } from "@/lib/security";
 
 export function LoginForm() {
   const [state, formAction] = useFormState(signIn, undefined);
   const searchParams = useSearchParams();
-  const next = searchParams.get("next") ?? "";
+  const next = safeRedirectPath(searchParams.get("next"), "");
+  const callbackFailed = searchParams.get("error") === "auth-callback-failed";
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-1 text-center">
-        <h1 className="text-xl font-semibold">Welcome back</h1>
+    <div className="space-y-7">
+      <div className="space-y-1.5">
+        <h1 className="text-3xl font-extrabold tracking-tight">Welcome back</h1>
         <p className="text-sm text-muted-foreground">Log in to continue learning.</p>
       </div>
       <form action={formAction} className="space-y-4">
         <input type="hidden" name="next" value={next} />
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" name="email" type="email" required autoComplete="email" />
+          <Input id="email" name="email" type="email" required autoComplete="email" maxLength={254} />
         </div>
         <div className="space-y-2">
           <div className="flex items-center justify-between">
@@ -42,14 +36,18 @@ export function LoginForm() {
               Forgot password?
             </Link>
           </div>
-          <PasswordInput id="password" name="password" required autoComplete="current-password" />
+          <PasswordInput id="password" name="password" required autoComplete="current-password" maxLength={72} />
         </div>
-        {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
-        <SubmitButton />
+        <FormMessage
+          error={state?.error ?? (callbackFailed ? "That link has expired or is invalid. Please try again." : undefined)}
+        />
+        <SubmitButton pendingText="Signing in..." className="w-full">
+          Log in
+        </SubmitButton>
       </form>
       <p className="text-center text-sm text-muted-foreground">
         Don&apos;t have an account?{" "}
-        <Link href="/signup" className="text-primary hover:underline">
+        <Link href="/signup" className="font-medium text-primary hover:underline">
           Sign up
         </Link>
       </p>

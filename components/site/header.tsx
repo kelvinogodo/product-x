@@ -1,22 +1,27 @@
-import Link from "next/link";
 import { getCurrentUser } from "@/lib/data/profile";
+import { HeaderShell } from "@/components/site/header-shell";
+import { Logo } from "@/components/site/logo";
 import { SiteNav } from "@/components/site/site-nav";
 
 export async function Header() {
   const user = await getCurrentUser();
 
   return (
-    <header className="relative border-b border-border bg-background/95 backdrop-blur">
+    <HeaderShell>
       <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="text-lg font-bold tracking-tight">
-          product x
-        </Link>
+        <Logo />
         <SiteNav
           user={
-            user ? { name: user.profile.full_name || user.email || "Account", role: user.profile.role } : null
+            user
+              ? {
+                  name: user.profile.full_name || user.email || "Account",
+                  role: user.profile.role,
+                  avatarUrl: user.profile.avatar_url,
+                }
+              : null
           }
         />
       </div>
-    </header>
+    </HeaderShell>
   );
 }

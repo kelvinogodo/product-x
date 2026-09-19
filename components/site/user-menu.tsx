@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { LayoutDashboard, LogOut, Shield, User } from "lucide-react";
+import { LayoutDashboard, LogOut, Settings, Shield } from "lucide-react";
+import { Avatar } from "@/components/site/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,13 +14,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "@/lib/actions/auth";
 
-export function UserMenu({ name, role }: { name: string; role: "student" | "admin" }) {
+export function UserMenu({ name, role, avatarUrl }: { name: string; role: "student" | "admin"; avatarUrl?: string | null }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2">
-          <User className="h-4 w-4" />
-          {name}
+        <Button variant="outline" size="sm" className="gap-2 rounded-full pl-1.5">
+          <Avatar name={name} src={avatarUrl} size={24} className="text-[10px]" />
+          <span className="max-w-[8rem] truncate">{name}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -28,6 +29,11 @@ export function UserMenu({ name, role }: { name: string; role: "student" | "admi
         <DropdownMenuItem asChild>
           <Link href="/dashboard" className="flex items-center gap-2">
             <LayoutDashboard className="h-4 w-4" /> Dashboard
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/dashboard/settings" className="flex items-center gap-2">
+            <Settings className="h-4 w-4" /> Settings
           </Link>
         </DropdownMenuItem>
         {role === "admin" && (

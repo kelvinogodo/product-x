@@ -4,7 +4,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { MarkdownEditor } from "@/components/admin/markdown-editor";
 import { upsertLesson, type FormState } from "@/lib/actions/admin";
 
 function SubmitButton() {
@@ -36,18 +36,18 @@ export function LessonForm({
   const [state, formAction] = useFormState<FormState, FormData>(action, undefined);
 
   return (
-    <form action={formAction} className="max-w-xl space-y-4">
+    <form action={formAction} className="max-w-3xl space-y-4">
       <div className="space-y-2">
         <Label htmlFor="title">Title</Label>
         <Input id="title" name="title" defaultValue={lesson?.title} required />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="content">Content</Label>
-        <Textarea id="content" name="content" defaultValue={lesson?.content ?? ""} rows={6} />
+        <Label htmlFor="content">Content (Markdown)</Label>
+        <MarkdownEditor name="content" defaultValue={lesson?.content ?? ""} />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="videoUrl">Video embed URL</Label>
-        <Input id="videoUrl" name="videoUrl" type="url" defaultValue={lesson?.video_url ?? ""} />
+        <Label htmlFor="videoUrl">Video URL (YouTube or Vimeo)</Label>
+        <Input id="videoUrl" name="videoUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." defaultValue={lesson?.video_url ?? ""} />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">

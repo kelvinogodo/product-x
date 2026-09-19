@@ -1,8 +1,9 @@
 import { notFound, redirect } from "next/navigation";
 import { LessonViewer } from "@/components/site/lesson-viewer";
-import { getCourseBySlug } from "@/lib/data/catalog";
+import { getCourseBySlug, getCourseLessons } from "@/lib/data/catalog";
 import { getCurrentUser } from "@/lib/data/profile";
 import { getCompletedLessonIds, isEnrolled } from "@/lib/data/dashboard";
+import { getCourseNotes, getCourseQuizzes } from "@/lib/data/learning";
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const course = await getCourseBySlug(params.slug);
@@ -19,10 +20,14 @@ export default async function LearnPage({ params }: { params: { slug: string } }
   const enrolled = await isEnrolled(user.id, course.id);
   if (!enrolled) redirect(`/courses/${params.slug}`);
 
-  const completedIds = await getCompletedLessonIds(user.id, course.id);
-  const lessons = (course.lessons ?? []).sort(
-    (a: { position: number }, b: { position: number }) => a.position - b.position
-  );
+  // Row-level security only returns lesson content to enrolled learners (and admins).
+  const [lessons, completedIds] = await Promise.all([
+    getCourseLessons(course.id),
+    getCompletedLessonIds(user.id, course.id),
+  ]);
+
+  const lessonIds = lessons.map((l) => l.id);
+  const [quizzes, notes] = await Promise.all([getCourseQuizzes(lessonIds), getCourseNotes(user.id, lessonIds)]);
 
   return (
     <LessonViewer
@@ -30,6 +35,8 @@ export default async function LearnPage({ params }: { params: { slug: string } }
       courseTitle={course.title}
       lessons={lessons}
       completedLessonIds={[...completedIds]}
+      quizzes={quizzes}
+      notes={notes}
     />
   );
 }

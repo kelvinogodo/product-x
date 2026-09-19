@@ -97,3 +97,45 @@ export async function getLessonById(id: string) {
   if (error) return null;
   return data;
 }
+
+export type AdminQuizQuestion = { prompt: string; options: string[]; correct_index: number; explanation: string };
+
+/** Full quiz including the correct answers — admin only (RLS blocks everyone else). */
+export async function getLessonQuiz(lessonId: string): Promise<AdminQuizQuestion[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("quiz_questions")
+    .select("prompt, options, explanation, position, id, answer:quiz_answers(correct_index)")
+    .eq("lesson_id", lessonId)
+    .order("position", { ascending: true })
+    .order("id", { ascending: true });
+  if (error) throw error;
+  return (data as unknown as { prompt: string; options: string[]; explanation: string | null; answer: { correct_index: number } | { correct_index: number }[] | null }[]).map((q) => {
+    const answer = Array.isArray(q.answer) ? q.answer[0] : q.answer;
+    return { prompt: q.prompt, options: q.options, explanation: q.explanation ?? "", correct_index: answer?.correct_index ?? 0 };
+  });
+}
+
+export async function getAllInstructors() {
+  const supabase = createClient();
+  const { data, error } = await supabase.from("instructors").select("*").order("name");
+  if (error) throw error;
+  return data;
+}
+
+export async function getInstructorById(id: string) {
+  const supabase = createClient();
+  const { data, error } = await supabase.from("instructors").select("*").eq("id", id).single();
+  if (error) return null;
+  return data;
+}
+
+export async function getQuizCounts(lessonIds: string[]): Promise<Record<string, number>> {
+  if (lessonIds.length === 0) return {};
+  const supabase = createClient();
+  const { data, error } = await supabase.from("quiz_questions").select("lesson_id").in("lesson_id", lessonIds);
+  if (error) throw error;
+  const counts: Record<string, number> = {};
+  for (const row of data) counts[row.lesson_id] = (counts[row.lesson_id] ?? 0) + 1;
+  return counts;
+}

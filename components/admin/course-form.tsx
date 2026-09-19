@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageUpload } from "@/components/admin/image-upload";
 import { upsertCourse, type FormState } from "@/lib/actions/admin";
 
 function SubmitButton() {
@@ -21,6 +22,7 @@ export function CourseForm({
   course,
   categories,
   tracks,
+  instructors,
 }: {
   course?: {
     id: string;
@@ -33,9 +35,13 @@ export function CourseForm({
     level: string;
     duration_minutes: number;
     published: boolean;
+    outcomes: string[];
+    instructor_id: string | null;
+    featured: boolean;
   };
   categories: { id: string; name: string }[];
   tracks: { id: string; name: string }[];
+  instructors: { id: string; name: string }[];
 }) {
   const action = upsertCourse.bind(null, course?.id ?? null);
   const [state, formAction] = useFormState<FormState, FormData>(action, undefined);
@@ -100,18 +106,51 @@ export function CourseForm({
         </div>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="coverImageUrl">Cover image URL</Label>
-        <Input id="coverImageUrl" name="coverImageUrl" type="url" defaultValue={course?.cover_image_url ?? ""} />
+        <Label htmlFor="coverImageUrl">Cover image</Label>
+        <ImageUpload name="coverImageUrl" bucket="covers" defaultValue={course?.cover_image_url ?? ""} placeholder="https://... or upload (empty = generated cover)" />
       </div>
-      <div className="flex items-center gap-2">
-        <input
-          id="published"
-          name="published"
-          type="checkbox"
-          defaultChecked={course?.published ?? false}
-          className="h-4 w-4 rounded border-input"
+      <div className="space-y-2">
+        <Label htmlFor="instructorId">Instructor</Label>
+        <Select id="instructorId" name="instructorId" defaultValue={course?.instructor_id ?? ""}>
+          <option value="">No instructor</option>
+          {instructors.map((instructor) => (
+            <option key={instructor.id} value={instructor.id}>
+              {instructor.name}
+            </option>
+          ))}
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="outcomes">What learners will get (one per line, up to 8)</Label>
+        <Textarea
+          id="outcomes"
+          name="outcomes"
+          defaultValue={(course?.outcomes ?? []).join("\n")}
+          rows={5}
+          placeholder={"Build a responsive layout\nUnderstand the box model"}
         />
-        <Label htmlFor="published">Published</Label>
+      </div>
+      <div className="flex flex-wrap gap-6">
+        <div className="flex items-center gap-2">
+          <input
+            id="published"
+            name="published"
+            type="checkbox"
+            defaultChecked={course?.published ?? false}
+            className="h-4 w-4 rounded border-input"
+          />
+          <Label htmlFor="published">Published</Label>
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            id="featured"
+            name="featured"
+            type="checkbox"
+            defaultChecked={course?.featured ?? false}
+            className="h-4 w-4 rounded border-input"
+          />
+          <Label htmlFor="featured">Featured on the home page</Label>
+        </div>
       </div>
       {state?.error && <p className="text-sm text-destructive">{state.error}</p>}
       <SubmitButton />

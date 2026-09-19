@@ -1,6 +1,8 @@
+import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 
-export async function getCurrentUser() {
+/** Memoised per request: the layout, header and page all ask for the user, but we only query once. */
+export const getCurrentUser = cache(async () => {
   const supabase = createClient();
   const {
     data: { user },
@@ -9,7 +11,7 @@ export async function getCurrentUser() {
 
   const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single();
   return profile ? { ...user, profile } : null;
-}
+});
 
 export async function requireUser() {
   const user = await getCurrentUser();

@@ -1,9 +1,12 @@
+"use client";
+
 import Link from "next/link";
-import Image from "next/image";
-import { Clock } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowUpRight, BookOpen, Clock, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { formatDuration } from "@/lib/utils";
+import { CourseCover } from "@/components/site/course-cover";
+import { levelClasses, pluralize } from "@/lib/course-ui";
+import { cn, formatDuration } from "@/lib/utils";
 
 export type CourseCardData = {
   slug: string;
@@ -12,56 +15,73 @@ export type CourseCardData = {
   cover_image_url: string | null;
   level: string;
   duration_minutes: number;
-  category: { name: string } | null;
+  category: { name: string; slug?: string } | null;
+  lesson_count?: number;
+  learner_count?: number;
 };
 
 export function CourseCard({ course, layout = "grid" }: { course: CourseCardData; layout?: "grid" | "row" }) {
+  const isGrid = layout === "grid";
+
   return (
-    <Link href={`/courses/${course.slug}`}>
-      <Card
-        className={
-          layout === "grid"
-            ? "group h-full overflow-hidden transition-shadow hover:shadow-md"
-            : "group flex items-center gap-4 overflow-hidden p-3 transition-shadow hover:shadow-md"
-        }
+    <motion.div whileHover={{ y: -6 }} transition={{ type: "spring", stiffness: 320, damping: 22 }} className="h-full">
+      <Link
+        href={`/courses/${course.slug}`}
+        className={cn(
+          "group relative block h-full overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-shadow duration-300 hover:shadow-xl hover:shadow-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          !isGrid && "flex items-center gap-4 p-3"
+        )}
       >
-        <div
-          className={
-            layout === "grid"
-              ? "relative aspect-video w-full overflow-hidden bg-muted"
-              : "relative h-20 w-32 shrink-0 overflow-hidden rounded-md bg-muted"
-          }
-        >
-          {course.cover_image_url ? (
-            <Image
-              src={course.cover_image_url}
-              alt=""
-              fill
-              className="object-cover transition-transform group-hover:scale-105"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-accent text-2xl font-bold text-primary/40">
-              {course.title.slice(0, 1)}
-            </div>
-          )}
-        </div>
-        <CardContent className={layout === "grid" ? "space-y-2 p-4" : "flex-1 space-y-1 p-0"}>
-          <div className="flex items-center gap-2">
+        <CourseCover
+          slug={course.slug}
+          title={course.title}
+          coverUrl={course.cover_image_url}
+          categorySlug={course.category?.slug}
+          className={isGrid ? "aspect-[16/9] w-full" : "h-24 w-36 shrink-0 rounded-xl"}
+          iconClassName={isGrid ? undefined : "h-10 w-10 bottom-2 right-3"}
+        />
+
+        <div className={cn("space-y-2.5", isGrid ? "p-5" : "min-w-0 flex-1")}>
+          <div className="flex flex-wrap items-center gap-2">
             {course.category && <Badge variant="secondary">{course.category.name}</Badge>}
-            <Badge variant="outline" className="capitalize">
+            <Badge variant="outline" className={cn("capitalize", levelClasses[course.level])}>
               {course.level}
             </Badge>
           </div>
-          <h3 className="line-clamp-1 font-semibold">{course.title}</h3>
-          {layout === "grid" && (
-            <p className="line-clamp-2 text-sm text-muted-foreground">{course.description}</p>
-          )}
-          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <Clock className="h-3.5 w-3.5" />
-            {formatDuration(course.duration_minutes)}
+
+          <h3 className="line-clamp-1 text-lg font-semibold tracking-tight transition-colors group-hover:text-primary">
+            {course.title}
+          </h3>
+
+          {isGrid && <p className="line-clamp-2 min-h-[2.5rem] text-sm text-muted-foreground">{course.description}</p>}
+
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <Clock className="h-3.5 w-3.5" />
+              {formatDuration(course.duration_minutes)}
+            </span>
+            {course.lesson_count !== undefined && (
+              <span className="flex items-center gap-1">
+                <BookOpen className="h-3.5 w-3.5" />
+                {pluralize(course.lesson_count, "lesson")}
+              </span>
+            )}
+            {!!course.learner_count && (
+              <span className="flex items-center gap-1">
+                <Users className="h-3.5 w-3.5" />
+                {course.learner_count.toLocaleString()} enrolled
+              </span>
+            )}
           </div>
-        </CardContent>
-      </Card>
-    </Link>
+        </div>
+
+        <ArrowUpRight
+          className={cn(
+            "absolute h-5 w-5 text-muted-foreground opacity-0 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary group-hover:opacity-100",
+            isGrid ? "right-4 top-4 rounded-full bg-background/90 p-1 text-foreground shadow" : "right-4 top-4"
+          )}
+        />
+      </Link>
+    </motion.div>
   );
 }

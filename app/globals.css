@@ -5,23 +5,44 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
+    --foreground: 224 40% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 224 40% 10%;
     --primary: 243 75% 59%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 243 75% 96%;
+    --secondary: 220 30% 96%;
+    --secondary-foreground: 224 40% 10%;
+    --muted: 220 30% 96%;
+    --muted-foreground: 220 12% 42%;
+    --accent: 243 90% 96%;
     --accent-foreground: 243 75% 40%;
-    --destructive: 0 72% 51%;
+    --destructive: 0 72% 45%;
     --destructive-foreground: 0 0% 100%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
+    --border: 220 24% 90%;
+    /* Form-control borders need 3:1 against the page (WCAG 1.4.11); decorative borders don't. */
+    --input: 220 10% 55%;
     --ring: 243 75% 59%;
-    --radius: 0.75rem;
+    --radius: 0.85rem;
+  }
+
+  .dark {
+    --background: 226 33% 7%;
+    --foreground: 220 30% 96%;
+    --card: 226 30% 10%;
+    --card-foreground: 220 30% 96%;
+    --primary: 243 92% 75%;
+    --primary-foreground: 226 40% 8%;
+    --secondary: 226 22% 15%;
+    --secondary-foreground: 220 30% 96%;
+    --muted: 226 22% 15%;
+    --muted-foreground: 220 14% 68%;
+    --accent: 243 45% 20%;
+    --accent-foreground: 243 100% 88%;
+    --destructive: 0 84% 66%;
+    --destructive-foreground: 226 40% 8%;
+    --border: 226 18% 20%;
+    --input: 226 12% 45%;
+    --ring: 243 92% 75%;
   }
 }
 
@@ -29,11 +50,74 @@
   * {
     @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground;
   }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+  }
+  ::selection {
+    @apply bg-primary/20;
+  }
 }
 
-.text-balance {
-  text-wrap: balance;
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-gradient {
+    @apply bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 bg-clip-text text-transparent;
+    background-size: 200% 200%;
+    animation: gradient-pan 8s ease infinite;
+  }
+  .bg-grid {
+    background-image: linear-gradient(hsl(var(--border) / 0.6) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.6) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  }
+  .glass {
+    @apply border border-border/60 bg-background/70 backdrop-blur-xl;
+  }
+}
+
+/* Lesson / markdown content that isn't fully covered by the typography plugin. */
+.lesson-prose pre {
+  @apply rounded-xl border border-border bg-[hsl(226_33%_9%)] p-4 text-[13px] leading-relaxed text-slate-100 shadow-inner;
+}
+.lesson-prose pre code {
+  @apply bg-transparent p-0 text-inherit;
+}
+.lesson-prose :not(pre) > code {
+  @apply rounded-md bg-muted px-1.5 py-0.5 text-[0.85em] font-medium text-foreground;
+}
+.lesson-prose :not(pre) > code::before,
+.lesson-prose :not(pre) > code::after {
+  content: none;
+}
+.lesson-prose blockquote {
+  @apply rounded-r-lg border-l-4 border-primary/60 bg-accent/60 py-1 pr-4 not-italic;
+}
+.lesson-prose table {
+  @apply block w-full overflow-x-auto text-sm;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

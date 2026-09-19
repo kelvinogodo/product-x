@@ -1,17 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Edit, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { DeleteButton } from "@/components/admin/delete-button";
-import { deleteLesson } from "@/lib/actions/admin";
-import { getCourseById } from "@/lib/data/admin";
-import { formatDuration } from "@/lib/utils";
+import { LessonList } from "@/components/admin/lesson-list";
+import { getCourseById, getQuizCounts } from "@/lib/data/admin";
 
 export default async function AdminCourseLessonsPage({ params }: { params: { id: string } }) {
   const course = await getCourseById(params.id);
   if (!course) notFound();
+  const quizCounts = await getQuizCounts((course.lessons ?? []).map((l) => l.id));
 
   return (
     <div className="space-y-6">
@@ -29,43 +27,15 @@ export default async function AdminCourseLessonsPage({ params }: { params: { id:
         </div>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-16">#</TableHead>
-            <TableHead>Title</TableHead>
-            <TableHead>Duration</TableHead>
-            <TableHead className="w-24" />
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {(course.lessons ?? []).map((lesson) => (
-            <TableRow key={lesson.id}>
-              <TableCell>{lesson.position}</TableCell>
-              <TableCell className="font-medium">{lesson.title}</TableCell>
-              <TableCell className="text-muted-foreground">{formatDuration(lesson.duration_minutes)}</TableCell>
-              <TableCell className="flex gap-1">
-                <Button variant="ghost" size="icon" asChild>
-                  <Link href={`/admin/courses/${course.id}/lessons/${lesson.id}/edit`}>
-                    <Edit className="h-4 w-4" />
-                  </Link>
-                </Button>
-                <DeleteButton
-                  onDelete={deleteLesson.bind(null, lesson.id, course.id)}
-                  confirmMessage={`Delete lesson "${lesson.title}"?`}
-                />
-              </TableCell>
-            </TableRow>
-          ))}
-          {(course.lessons ?? []).length === 0 && (
-            <TableRow>
-              <TableCell colSpan={4} className="text-center text-muted-foreground">
-                No lessons yet.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+      <LessonList
+        courseId={course.id}
+        initial={(course.lessons ?? []).map((l) => ({
+          id: l.id,
+          title: l.title,
+          duration_minutes: l.duration_minutes,
+          quiz_questions: quizCounts[l.id] ?? 0,
+        }))}
+      />
 
       {!course.published && (
         <Badge variant="outline">This course is a draft and won&apos;t appear publicly until published.</Badge>
